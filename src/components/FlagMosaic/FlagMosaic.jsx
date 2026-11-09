@@ -42,6 +42,7 @@ const SPEED = 24 // unidades do frame por segundo
 
 // Cada fileira tem duas cópias iguais: ao terminar de deslocar uma, o loop recomeça sem emenda visível
 function FlagRow({ index, scale }) {
+  const styles = useThemedStyles(createStyles)
   const progress = useRef(new Animated.Value(0)).current
   const tileWidth = TILE_WIDTH * scale
   const tileHeight = TILE_HEIGHT * scale
