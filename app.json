@@ -13,6 +13,7 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.ricardotrindade.mundi",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -30,6 +31,12 @@
           "backgroundColor": "#f5f7f6"
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "a42f9f88-2794-4950-8c44-7cb38121006f"
+      }
+    },
+    "owner": "escort-inroad"
   }
 }
