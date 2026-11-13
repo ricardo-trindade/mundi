@@ -10,6 +10,7 @@ import { useTheme, useThemedStyles } from '../../context/ThemeContext.jsx'
 const FRAME_WIDTH = 402
 const MAX_SCALE = 1.25 // evita elementos gigantes em tablet e web
 const DEFAULT_ZOOM = 4
+const CARTO_KEY = process.env.EXPO_PUBLIC_CARTO_KEY
 
 // No Figma o Brasil (8,5 milhões de km²) aparece com zoom ~3,3; países menores ganham mais zoom
 function zoomForArea(areaKm) {
@@ -45,9 +46,8 @@ function buildMapHtml({ name, coordinates, areaKm }, dark) {
 <script>
   const options = ${options};
   const map = L.map('map', { zoomControl: false, zoomSnap: 0 }).setView([options.lat, options.lng], options.zoom);
-  L.tileLayer(${dark ? `'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-    attribution: '&copy; OpenStreetMap &copy; CARTO',
-    subdomains: 'abcd',` : `'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+  L.tileLayer(${dark ? `'https://basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}.png?key=${CARTO_KEY}', {
+    attribution: '&copy; OpenStreetMap &copy; CARTO',` : `'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
     attribution: 'Tiles &copy; Esri',`}
     maxZoom: 18,
   }).addTo(map);
