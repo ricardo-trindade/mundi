@@ -4,7 +4,7 @@ import { WebView } from 'react-native-webview'
 import BackButton from '../../components/BackButton/BackButton.jsx'
 import PixelBox from '../../components/PixelBox/PixelBox.jsx'
 import PixelText from '../../components/PixelText/PixelText.jsx'
-import { useThemedStyles } from '../../context/ThemeContext.jsx'
+import { useTheme, useThemedStyles } from '../../context/ThemeContext.jsx'
 
 // Medidas da tela de mapa do Figma, em um frame de 402 de largura
 const FRAME_WIDTH = 402
@@ -17,7 +17,7 @@ function zoomForArea(areaKm) {
   return Math.min(10, Math.max(2, 10.2 - Math.log10(areaKm)))
 }
 
-function buildMapHtml({ name, coordinates, areaKm }) {
+function buildMapHtml({ name, coordinates, areaKm }, dark) {
   const options = JSON.stringify({ name, lat: coordinates.lat, lng: coordinates.lng, zoom: zoomForArea(areaKm) }).replace(
     /</g,
     '\\u003c',
@@ -31,8 +31,8 @@ function buildMapHtml({ name, coordinates, areaKm }) {
   integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
 <style>
-  html, body, #map { height: 100%; margin: 0; background: #A6D5EA; }
-  .leaflet-popup-content-wrapper, .leaflet-popup-tip { background: #141414; color: #FFFFFF; box-shadow: none; }
+  html, body, #map { height: 100%; margin: 0; background: ${dark ? '#0F1823' : '#A6D5EA'}; }
+  .leaflet-popup-content-wrapper, .leaflet-popup-tip { background: ${dark ? '#1E2B3A' : '#141414'}; color: ${dark ? '#E8FFF8' : '#FFFFFF'}; box-shadow: none; }
   .leaflet-popup-content-wrapper { border-radius: 0; }
   .leaflet-popup-content { margin: 16px 34px 16px 18px; font: 11px/1.4 'Press Start 2P', monospace; }
   .leaflet-container a.leaflet-popup-close-button { color: #8A8A8A; }
@@ -45,8 +45,10 @@ function buildMapHtml({ name, coordinates, areaKm }) {
 <script>
   const options = ${options};
   const map = L.map('map', { zoomControl: false, zoomSnap: 0 }).setView([options.lat, options.lng], options.zoom);
-  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
-    attribution: 'Tiles &copy; Esri',
+  L.tileLayer(${dark ? `'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; OpenStreetMap &copy; CARTO',
+    subdomains: 'abcd',` : `'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Tiles &copy; Esri',`}
     maxZoom: 18,
   }).addTo(map);
   const label = document.createElement('span');
@@ -62,6 +64,7 @@ function buildMapHtml({ name, coordinates, areaKm }) {
 
 export default function CountryMap({ country, onBack }) {
   const styles = useThemedStyles(createStyles)
+  const { mode } = useTheme()
   const insets = useSafeAreaInsets()
   const { width: screenWidth } = useWindowDimensions()
   const scale = Math.min(screenWidth / FRAME_WIDTH, MAX_SCALE)
@@ -69,9 +72,10 @@ export default function CountryMap({ country, onBack }) {
   return (
     <View style={styles.screen}>
       <WebView
+        key={mode}
         style={styles.map}
         originWhitelist={['*']}
-        source={{ html: buildMapHtml(country) }}
+        source={{ html: buildMapHtml(country, mode === 'dark') }}
         accessibilityLabel={`Mapa de ${country.name}`}
       />
       <BackButton

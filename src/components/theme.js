@@ -15,22 +15,22 @@ export const lightColors = {
   heroShadow: '#FFFFFF',
 }
 
-// Modo escuro: o menta do fundo vira um verde-petróleo profundo, as caixas ficam grafite
-// esverdeado e a borda pixel ganha o menta claro da paleta (como um fliperama de tela escura)
+// Modo escuro: azul-ardósia profundo com caixas em tom mais claro e a borda pixel no menta da paleta,
+// que combina com o fundo menta do modo claro sem ficar verde sobre verde
 export const darkColors = {
-  background: '#0B2620',
-  backgroundAlt: '#14594A',
-  surface: '#1C2B27',
-  surfaceAlt: '#173F35',
+  background: '#0F1823',
+  backgroundAlt: '#1F3347',
+  surface: '#1E2B3A',
+  surfaceAlt: '#2A4157',
   border: '#79FFD9',
   shadow: 'rgba(0, 0, 0, 0.7)',
-  text: '#E6FFF7',
-  placeholder: '#6F8F86',
+  text: '#E8FFF8',
+  placeholder: '#7D93A6',
   white: '#FFFFFF',
-  error: '#FF6B6B',
-  icon: '#E6FFF7',
-  heroText: '#E6FFF7',
-  heroShadow: '#14594A',
+  error: '#FF7B7B',
+  icon: '#E8FFF8',
+  heroText: '#E8FFF8',
+  heroShadow: '#1F3347',
 }
 
 export const fonts = {

@@ -10,7 +10,7 @@ export default function CountryGridCard({ country, favorite = false, onPress, on
   return (
     <View style={[styles.card, style]}>
       <View>
-        <PixelBox style={styles.flagBox} onPress={onPress} accessibilityLabel={country.name}>
+        <PixelBox style={styles.flagBox} contentStyle={styles.flagContent} onPress={onPress} accessibilityLabel={country.name}>
           {flagSource ? <Image source={flagSource} style={styles.flag} /> : null}
         </PixelBox>
         <Pressable
@@ -40,6 +40,10 @@ const styles = StyleSheet.create({
   flagBox: {
     width: '100%',
     aspectRatio: 4 / 3,
+  },
+  flagContent: {
+    padding: 0,
+    overflow: 'hidden',
   },
   flag: {
     width: '100%',

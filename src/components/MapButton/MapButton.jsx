@@ -14,7 +14,7 @@ export default function MapButton({ url, onPress, style }) {
       <PixelBox style={styles.label} contentStyle={styles.labelContent} onPress={handlePress} accessibilityLabel="Ver no mapa">
         <PixelText>Ver no Mapa →</PixelText>
       </PixelBox>
-      <PixelBox style={styles.iconBox} onPress={handlePress} accessibilityLabel="Ver no mapa">
+      <PixelBox style={styles.iconBox} contentStyle={styles.labelContent} onPress={handlePress} accessibilityLabel="Ver no mapa">
         <Image source={globeIcon} style={styles.icon} />
       </PixelBox>
     </View>

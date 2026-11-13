@@ -1,19 +1,39 @@
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
+import { KEYS, loadValue, saveValue } from '../services/storage.js'
 
 const FavoritesContext = createContext(null)
 
-export function FavoritesProvider({ children, initialFavorites = [] }) {
-  const [favorites, setFavorites] = useState(initialFavorites)
+// Sem initialFavorites, os favoritos são lidos do armazenamento do aparelho e salvos a cada mudança.
+// Com initialFavorites (prévia web), ficam só em memória.
+export function FavoritesProvider({ children, initialFavorites }) {
+  const persist = initialFavorites === undefined
+  const [favorites, setFavorites] = useState(initialFavorites ?? [])
+  const [loaded, setLoaded] = useState(!persist)
+
+  useEffect(() => {
+    if (!persist) return undefined
+    let cancelled = false
+    loadValue(KEYS.favorites, []).then((saved) => {
+      if (cancelled) return
+      setFavorites(Array.isArray(saved) ? saved : [])
+      setLoaded(true)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [persist])
 
   function toggleFavorite(country) {
-    setFavorites((currentFavorites) => {
-      const isFavorite = currentFavorites.some((favorite) => favorite.code === country.code)
+    const isFavorite = favorites.some((favorite) => favorite.code === country.code)
+    const next = isFavorite
+      ? favorites.filter((favorite) => favorite.code !== country.code)
+      : [...favorites, country]
 
-      return isFavorite
-        ? currentFavorites.filter((favorite) => favorite.code !== country.code)
-        : [...currentFavorites, country]
-    })
+    setFavorites(next)
+    if (persist) saveValue(KEYS.favorites, next)
   }
+
+  if (!loaded) return null
 
   return (
     <FavoritesContext.Provider value={{ favorites, toggleFavorite }}>

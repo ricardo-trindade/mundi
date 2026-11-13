@@ -18,6 +18,7 @@ export default function CountryHeader({ country, style }) {
       </PixelBox>
       <PixelBox
         style={styles.flagBox}
+        contentStyle={styles.flagContent}
         onPress={flagSource ? () => setFlagOpen(true) : undefined}
         accessibilityLabel={`Ampliar bandeira de ${country.name}`}
       >
@@ -51,9 +52,13 @@ const styles = StyleSheet.create({
   flagBox: {
     height: 193,
   },
+  flagContent: {
+    padding: 0,
+    overflow: 'hidden',
+  },
   flag: {
-    width: 244,
-    height: 183,
+    width: '100%',
+    height: '100%',
     resizeMode: 'cover',
   },
 })

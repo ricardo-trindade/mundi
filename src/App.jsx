@@ -13,6 +13,7 @@ import { findCountry } from './services/countriesApi.js'
 import flagBrazil from './assets/images/flags/br.png'
 import flagCanada from './assets/images/flags/ca.png'
 import flagJapan from './assets/images/flags/jp.png'
+import { PreferencesProvider } from './context/PreferencesContext.jsx'
 import { ThemeProvider, useTheme, useThemedStyles } from './context/ThemeContext.jsx'
 
 const PREVIEW_COUNTRIES = [
@@ -69,7 +70,9 @@ const PREVIEW_COUNTRIES = [
 export default function App() {
   return (
     <ThemeProvider>
-      <AppContent />
+      <PreferencesProvider>
+        <AppContent />
+      </PreferencesProvider>
     </ThemeProvider>
   )
 }
@@ -119,7 +122,7 @@ function AppContent() {
           <ActivityIndicator color={colors.text} />
         </View>
       ) : (
-        <FavoritesProvider initialFavorites={isWebPreview ? previewFavorites : []}>
+        <FavoritesProvider initialFavorites={isWebPreview ? previewFavorites : undefined}>
           <View style={styles.root}>
             <StatusBar style={statusBarStyle} />
             {!splashDone ? <Splash onFinish={() => setSplashDone(true)} /> : null}

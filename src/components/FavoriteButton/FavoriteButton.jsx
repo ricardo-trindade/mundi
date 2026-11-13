@@ -1,4 +1,4 @@
-import { Image, StyleSheet } from 'react-native'
+import { Image, StyleSheet, View } from 'react-native'
 import { useTheme } from '../../context/ThemeContext.jsx'
 import PixelBox from '../PixelBox/PixelBox.jsx'
 
@@ -19,13 +19,29 @@ export default function FavoriteButton({ active = false, onPress, width = 48, he
 }
 
 export function FavoriteIcon({ active, size = 28, style }) {
-  const { colors } = useTheme()
-  // O coração vazio é só contorno preto: no modo escuro ele ganha a cor de ícone do tema
-  const tint = active ? null : { tintColor: colors.icon }
-  return <Image source={active ? heartFilled : heartOutline} style={[{ width: size, height: size }, styles.icon, tint, style]} />
+  const { mode, colors } = useTheme()
+  const box = { width: size, height: size }
+
+  if (active) return <Image source={heartFilled} style={[box, styles.icon, style]} />
+
+  // Coração vazio: no modo claro ganha miolo branco (senão some sobre bandeiras pretas);
+  // no escuro é só o contorno na cor de ícone do tema
+  return (
+    <View style={[box, style]}>
+      {mode === 'light' ? (
+        <Image source={heartFilled} style={[box, styles.icon, styles.fill, { tintColor: colors.white }]} />
+      ) : null}
+      <Image source={heartOutline} style={[box, styles.icon, styles.fill, mode === 'dark' && { tintColor: colors.icon }]} />
+    </View>
+  )
 }
 
 const styles = StyleSheet.create({
+  fill: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+  },
   icon: {
     resizeMode: 'contain',
   },

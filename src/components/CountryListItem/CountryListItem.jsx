@@ -33,10 +33,11 @@ const styles = StyleSheet.create({
   },
   flagContent: {
     padding: 0,
+    overflow: 'hidden',
   },
   flag: {
-    width: 57,
-    height: 41,
+    width: '100%',
+    height: '100%',
     resizeMode: 'cover',
   },
   nameBox: {

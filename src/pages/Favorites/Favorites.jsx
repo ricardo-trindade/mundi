@@ -9,6 +9,7 @@ import PixelText from '../../components/PixelText/PixelText.jsx'
 import SearchBar from '../../components/SearchBar/SearchBar.jsx'
 import ViewToggle from '../../components/ViewToggle/ViewToggle.jsx'
 import { useFavorites } from '../../context/FavoritesContext.jsx'
+import { usePreferences } from '../../context/PreferencesContext.jsx'
 import { useThemedStyles } from '../../context/ThemeContext.jsx'
 
 function normalizeText(text) {
@@ -24,7 +25,7 @@ export default function Favorites({ onBack, onSelectCountry }) {
   const [query, setQuery] = useState('')
   const [countryToRemove, setCountryToRemove] = useState(null)
   const [removalDialogVisible, setRemovalDialogVisible] = useState(false)
-  const [viewMode, setViewMode] = useState('grid')
+  const { favoritesView: viewMode, setFavoritesView: setViewMode } = usePreferences()
   const [listWidth, setListWidth] = useState(0)
   // Lista fixada ao abrir a tela: quem é desfavoritado continua visível, com o coração vazio
   const [listedCountries] = useState(favorites)

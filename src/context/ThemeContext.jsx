@@ -1,6 +1,6 @@
-import { createContext, useContext, useMemo, useState } from 'react'
-import { useColorScheme } from 'react-native'
+import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { darkColors, lightColors } from '../components/theme.js'
+import { KEYS, loadValue, saveValue } from '../services/storage.js'
 
 const ThemeContext = createContext({
   mode: 'light',
@@ -8,21 +8,37 @@ const ThemeContext = createContext({
   toggleTheme: () => {},
 })
 
-// Segue o tema do sistema até o usuário escolher um modo pelo botão
+// O app sempre abre no modo claro, a menos que o usuário tenha escolhido o escuro antes (fica salvo)
 export function ThemeProvider({ children }) {
-  const systemScheme = useColorScheme()
-  const [chosenMode, setChosenMode] = useState(null)
-  const mode = chosenMode ?? (systemScheme === 'dark' ? 'dark' : 'light')
+  const [mode, setMode] = useState('light')
+  const [loaded, setLoaded] = useState(false)
+
+  useEffect(() => {
+    let cancelled = false
+    loadValue(KEYS.theme, 'light').then((saved) => {
+      if (cancelled) return
+      setMode(saved === 'dark' ? 'dark' : 'light')
+      setLoaded(true)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   const value = useMemo(
     () => ({
       mode,
       colors: mode === 'dark' ? darkColors : lightColors,
-      toggleTheme: () => setChosenMode(mode === 'dark' ? 'light' : 'dark'),
+      toggleTheme: () => {
+        const next = mode === 'dark' ? 'light' : 'dark'
+        setMode(next)
+        saveValue(KEYS.theme, next)
+      },
     }),
     [mode],
   )
 
+  if (!loaded) return null
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
 }
 
